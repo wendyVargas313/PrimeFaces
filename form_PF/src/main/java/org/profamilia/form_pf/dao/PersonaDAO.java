@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +21,35 @@ public class PersonaDAO {
     // Configurar la conexión con la base de datos MySQL
     public PersonaDAO() throws SQLException {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");  // Registrar el driver
-            this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/profamilia_db",
-                    "root", "0000");
-        } catch (ClassNotFoundException | SQLException e) {
+            String jdbcURL = "jdbc:derby:profamilia_db;create=true";
+            connection = DriverManager.getConnection(jdbcURL);
+            crearTabla();
+        } catch (SQLException e) {
             throw new SQLException("Error al conectar con la base de datos.", e);
         }
+    }
+
+    private void crearTabla() throws SQLException {
+        String crearTablaSQL = "CREATE TABLE formulario ("
+                + "id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, "
+                + "INCREMENT BY 1),"
+                + "tDocumento VARCHAR(50)"
+                + "numDocumento VARCHAR(50)"
+                + "nombre VARCHAR(50)"
+                + "apellido VARCHAR(50)"
+                + "telefono VARCHAR(50)"
+                + "direccion VARCHAR(50)"
+                + "correo VARCHAR(50))";
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(crearTablaSQL);
+        } catch (SQLException e) {
+            if (!e.getSQLState().equals("XOY32")) //codigo de error cuando la tabla ya existe
+            {
+                throw e;
+            }
+        }
+
     }
 
     // Método para guardar una nueva persona en la base de datos
