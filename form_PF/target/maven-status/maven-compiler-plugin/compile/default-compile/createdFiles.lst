@@ -1,0 +1,5 @@
+org\profamilia\form_pf\modelo\PersonaDTO.class
+org\profamilia\form_pf\controlador\FormBean.class
+org\profamilia\form_pf\dao\PersonaDAO.class
+org\profamilia\form_pf\resources\JakartaEE10Resource.class
+org\profamilia\form_pf\JakartaRestConfiguration.class
