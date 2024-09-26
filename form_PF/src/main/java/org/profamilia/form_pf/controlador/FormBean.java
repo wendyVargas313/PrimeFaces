@@ -8,12 +8,13 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import org.profamilia.form_pf.dao.PersonaDAO;
 import org.profamilia.form_pf.modelo.PersonaDTO;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 
-@Named
+@Named("formBean")
 @ViewScoped
 public class FormBean implements Serializable {
 
@@ -25,7 +26,6 @@ public class FormBean implements Serializable {
     private String direccion;
     private String correo;
 
-    // DAO para acceder a la base de datos
     private PersonaDAO personaDAO;
 
     public FormBean() {
@@ -38,11 +38,14 @@ public class FormBean implements Serializable {
         }
     }
 
-    // Métodos CRUD
+    // Crear PersonaDTO a partir de los campos del formulario
+    private PersonaDTO crearPersonaDTO() {
+        return new PersonaDTO(tDocumento, numDocumento, nombre, apellido, telefono, direccion, correo);
+    }
+
     public void guardar() {
-        PersonaDTO persona = new PersonaDTO(tDocumento, numDocumento, nombre,
-                apellido, telefono, direccion, correo);
         try {
+            PersonaDTO persona = crearPersonaDTO();
             personaDAO.guardar(persona);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Persona guardada exitosamente"));
@@ -54,9 +57,8 @@ public class FormBean implements Serializable {
     }
 
     public void actualizar() {
-        PersonaDTO persona = new PersonaDTO(tDocumento, numDocumento, nombre,
-                apellido, telefono, direccion, correo);
         try {
+            PersonaDTO persona = crearPersonaDTO();
             personaDAO.actualizar(persona);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Persona actualizada exitosamente"));
@@ -83,41 +85,43 @@ public class FormBean implements Serializable {
         try {
             PersonaDTO persona = personaDAO.consultar(numDocumento);
             if (persona != null) {
-                this.tDocumento = persona.gettDocumento();
+                this.tDocumento = persona.getTDocumento();
                 this.nombre = persona.getNombre();
                 this.apellido = persona.getApellido();
                 this.telefono = persona.getTelefono();
                 this.direccion = persona.getDireccion();
                 this.correo = persona.getCorreo();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage("Persona encontrada: " + persona.getNombre()));
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso",
-                                "No se encontró la persona."));
+                                "No se encontró la persona con numDocumento: " + numDocumento));
             }
         } catch (SQLException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                             "No se pudo consultar la persona."));
         }
-    }
+   }
 
-    // Cerrar la conexión cuando ya no sea necesaria
+    // Método opcional para cerrar la conexión (generalmente no necesario con DAO bien gestionado)
     public void cerrarConexion() {
         try {
             personaDAO.cerrarConexion();
         } catch (SQLException e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
-                          "Error al cerrar la conexión con la base de datos."));
+                            "Error al cerrar la conexión con la base de datos."));
         }
     }
 
     // Getters y Setters
-    public String gettDocumento() {
+    public String getTDocumento() {
         return tDocumento;
     }
 
-    public void settDocumento(String tDocumento) {
+    public void setTDocumento(String tDocumento) {
         this.tDocumento = tDocumento;
     }
 

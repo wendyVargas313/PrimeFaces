@@ -21,7 +21,7 @@ public class PersonaDAO {
     // Configurar la conexión con la base de datos MySQL
     public PersonaDAO() throws SQLException {
         try {
-            String jdbcURL = "jdbc:derby:profamilia_db;create=true";
+            String jdbcURL = "jdbc:derby://localhost:1527/profamilia_db;create=true";
             connection = DriverManager.getConnection(jdbcURL);
             crearTabla();
         } catch (SQLException e) {
@@ -31,25 +31,23 @@ public class PersonaDAO {
 
     private void crearTabla() throws SQLException {
         String crearTablaSQL = "CREATE TABLE formulario ("
-                + "id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, "
-                + "INCREMENT BY 1),"
-                + "tDocumento VARCHAR(50)"
-                + "numDocumento VARCHAR(50)"
-                + "nombre VARCHAR(50)"
-                + "apellido VARCHAR(50)"
-                + "telefono VARCHAR(50)"
-                + "direccion VARCHAR(50)"
+                + "id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+                + "tDocumento VARCHAR(50),"
+                + "numDocumento VARCHAR(50),"
+                + "nombre VARCHAR(50),"
+                + "apellido VARCHAR(50),"
+                + "telefono VARCHAR(50),"
+                + "direccion VARCHAR(50),"
                 + "correo VARCHAR(50))";
 
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(crearTablaSQL);
         } catch (SQLException e) {
-            if (!e.getSQLState().equals("XOY32")) //codigo de error cuando la tabla ya existe
-            {
-                throw e;
+            // Este error significa que la tabla ya existe, y se ignora
+            if (!e.getSQLState().equals("X0Y32")) {
+                throw e;  // Lanza el error si es otro tipo de excepción
             }
         }
-
     }
 
     // Método para guardar una nueva persona en la base de datos
@@ -58,7 +56,7 @@ public class PersonaDAO {
                 + "apellido, telefono, direccion, correo) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, persona.gettDocumento());
+            stmt.setString(1, persona.getTDocumento());
             stmt.setString(2, persona.getNumDocumento());
             stmt.setString(3, persona.getNombre());
             stmt.setString(4, persona.getApellido());
@@ -77,7 +75,7 @@ public class PersonaDAO {
                 + "apellido = ?, telefono = ?, direccion = ?, correo = ? "
                 + "WHERE numDocumento = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, persona.gettDocumento());
+            stmt.setString(1, persona.getTDocumento());
             stmt.setString(2, persona.getNombre());
             stmt.setString(3, persona.getApellido());
             stmt.setString(4, persona.getTelefono());

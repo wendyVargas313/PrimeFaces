@@ -20,7 +20,7 @@
             <p:panel header="Formulario de Registro">
                 <h:panelGrid columns="2">
                     <h:outputLabel for="tDocumento" value="Tipo de Documento: " />
-                    <p:inputText id="tDocumento" value="#{FormBean.tDocumento}" />
+                    <p:inputText id="tDocumento" value="#{formBean.TDocumento}" />
 
                     <h:outputLabel for="numDocumento" value="Número de Documento: " />
                     <p:inputText id="numDocumento" value="#{formBean.numDocumento}" />
@@ -41,13 +41,13 @@
                     <p:inputText id="correo" value="#{formBean.correo}" />
                 </h:panelGrid>
 
-                <p:commandButton value="Guardar " action="#{formBean.guardar}" 
+                <p:commandButton value="Guardar" action="#{formBean.guardar}" 
                                  icon="pi pi-save" update="@form" />
-                <p:commandButton value="Actualizar " action="#{formBean.actualizar}" 
+                <p:commandButton value="Actualizar" action="#{formBean.actualizar}" 
                                  icon="pi pi-refresh" update="@form" />
-                <p:commandButton value="Eliminar " action="#{formBean.eliminar}" 
+                <p:commandButton value="Eliminar" action="#{formBean.eliminar}" 
                                  icon="pi pi-times" update="@form" />
-                <p:commandButton value="Consultar " action="#{formBean.consultar}" 
+                <p:commandButton value="Consultar" action="#{formBean.consultar}" 
                                  icon="pi pi-search" update="@form" />
             </p:panel>
         </h:form>

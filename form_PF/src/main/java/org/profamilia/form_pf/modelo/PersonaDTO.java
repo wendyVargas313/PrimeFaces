@@ -32,11 +32,11 @@ public class PersonaDTO {
     }
 
     // Getters y Setters
-    public String gettDocumento() {
+    public String getTDocumento() {
         return tDocumento;
     }
 
-    public void settDocumento(String tDocumento) {
+    public void setTDocumento(String tDocumento) {
         this.tDocumento = tDocumento;
     }
 
